@@ -20,32 +20,41 @@ namespace Gameplay
         [SerializeField] GameObject frontCard;
         [SerializeField] GameObject backCard;
 
+        private bool canClick = false;
+
         public void SetPosition(Vector2 position)
         {
             transform.position = position;
-        }
-
-        public void DisableCard()
-        {
-            frontCard.SetActive(false);
-            backCard.SetActive(true);
         }
 
         public void EnableCard()
         {
             frontCard.SetActive(true);
             backCard.SetActive(false);
+            canClick = false;
         }
+
+        public void DisableCard()
+        {
+            frontCard.SetActive(false);
+            backCard.SetActive(true);
+            canClick = true;
+        }
+
 
         private void OnMouseDown()
         {
-            transform.localScale = Vector3.one * 1.1f;
+            if (canClick)
+                transform.localScale = Vector3.one * 1.1f;
         }
 
         private void OnMouseUp()
         {
-            transform.localScale = Vector3.one;
-            TileClicked?.Invoke(this);
+            if (canClick)
+            {
+                transform.localScale = Vector3.one;
+                TileClicked?.Invoke(this);
+            }
         }
 
 

@@ -22,7 +22,7 @@ namespace Gameplay
 
             Vector3 centerPosition = CalculateCenterPosition();
 
-            Camera.main.transform.position = new Vector3(centerPosition.x, centerPosition.y, Camera.main.transform.position.z);
+            Camera.main.transform.position = new Vector3(centerPosition.x - (centerPosition.x / 2), centerPosition.y, Camera.main.transform.position.z);
             Camera.main.orthographicSize = (cards.GetLength(0) > cards.GetLength(1)) ? cards.GetLength(0) : cards.GetLength(1);
         }
 
