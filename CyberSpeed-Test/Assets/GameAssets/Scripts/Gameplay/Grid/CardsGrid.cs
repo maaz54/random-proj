@@ -8,12 +8,29 @@ namespace Gameplay
 {
     public class CardsGrid : MonoBehaviour
     {
+        /// <summary>
+        /// Card objects that represent the different card prefabs available for the grid
+        /// </summary>
         [SerializeField] private Card[] cardsPrefabs;
+
+        /// <summary>
+        /// generated card objects in a grid structure
+        /// </summary>
         private ICard[,] cardsGrid;
+
+        /// <summary>
+        /// spacing between cards in the grid.
+        /// </summary>
         [SerializeField] private float offset;
 
+        /// <summary>
+        /// ACtion triggered when cards are generated.
+        /// </summary>
         public Action<ICard[,]> CardsGenerated;
 
+        /// <summary>
+        /// generating a grid of cards with a specified size.
+        /// </summary>
         public void GenerateCards(int xLength, int yLength)
         {
             cardsGrid = new ICard[xLength, yLength];
@@ -37,6 +54,9 @@ namespace Gameplay
         }
 
 
+        /// <summary>
+        /// destroying all the cards in the grid
+        /// </summary>
         public void DestroyCards()
         {
             foreach (var card in cardsGrid)

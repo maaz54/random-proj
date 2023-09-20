@@ -8,6 +8,10 @@ namespace Gameplay
 {
     public class CameraSize : MonoBehaviour
     {
+
+        /// <summary>
+        /// cards in the game
+        /// </summary>
         [SerializeField] Transform[] cards;
 
         private void Start()
@@ -15,6 +19,9 @@ namespace Gameplay
             GameplayManager.Instance.OnCardsGenerated += OnCardsGenerate;
         }
 
+        /// <summary>
+        /// called when cards are generated in the game.
+        /// </summary>
         private void OnCardsGenerate(ICard[,] cards)
         {
 
@@ -26,6 +33,9 @@ namespace Gameplay
             Camera.main.orthographicSize = (cards.GetLength(0) > cards.GetLength(1)) ? cards.GetLength(0) : cards.GetLength(1);
         }
 
+        /// <summary>
+        /// calculates the center position of the cards
+        /// </summary>
         Vector3 CalculateCenterPosition()
         {
             Vector3 sum = Vector3.zero;

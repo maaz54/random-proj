@@ -16,19 +16,74 @@ namespace Gameplay
 {
     public class GameplayManager : Singleton<GameplayManager>
     {
+        /// <summary>
+        /// dimensions (length) of the card grid.
+        /// </summary>
         [SerializeField] Vector2 cardsLenght;
+
+        /// <summary>
+        /// object pooler component for managing object pooling in the game.
+        /// </summary>
         [SerializeField] ObjectPooler objectPooler;
+
+        /// <summary>
+        /// score component for keeping track of the player's score.
+        /// </summary>
         [SerializeField] Score score;
+
+        /// <summary>
+        /// user interface component for displaying the player's score.
+        /// </summary>
         [SerializeField] ScoreUi scoreUI;
+
+        /// <summary>
+        /// Return object pooler component 
+        /// </summary>
         public IObjectPooler ObjectPooler => objectPooler;
+
+        /// <summary>
+        /// component responsible for managing the grid of cards.
+        /// </summary>
         [SerializeField] CardsGrid cardsGrid;
+
+        /// <summary>
+        /// triggered when cards are generated
+        /// </summary>
         public Action<ICard[,]> OnCardsGenerated;
+
+        /// <summary>
+        /// user interface component for managing in-game menus.
+        /// </summary>
         [SerializeField] MenuUi menuUi;
+
+        /// <summary>
+        /// SFX player component for managing sound effects.
+        /// </summary>
         [SerializeField] SFXPlayer sFXPlayer;
+
+        /// <summary>
+        /// Return Sfx player component
+        /// </summary>
         public ISFXPlayer SFXPlayer => sFXPlayer;
+
+        /// <summary>
+        /// store the current grid of card objects.
+        /// </summary>
         ICard[,] currentcardsGrid;
+
+        /// <summary>
+        /// previously selected card
+        /// </summary>
         ICard prevCardSelected = null;
+
+        /// <summary>
+        /// total number of cards remaining in the game
+        /// </summary>
         private int totalCardsRemainig;
+
+        /// <summary>
+        /// CancellationTokenSource for managing asynchronous tasks
+        /// </summary>
         private CancellationTokenSource startGameCancellationTokenSource;
 
         private void Start()
@@ -42,16 +97,25 @@ namespace Gameplay
             score.UpdateScore(score.GetScore);
         }
 
+        /// <summary>
+        /// Updates the score UI text
+        /// </summary>
         private void OnUpdateScore(int score)
         {
             scoreUI.UpdateScoreText(score);
         }
 
+        /// <summary>
+        /// Updates the No of Turns UI text
+        /// </summary>
         private void OnUpdateNoOfTurns(int score)
         {
             scoreUI.UpdateNoOfTurnsText(score);
         }
 
+        /// <summary>
+        /// triggered when cards are generated,
+        /// </summary>
         private void CardsGenerated(ICard[,] cards)
         {
             currentcardsGrid = cards;
@@ -65,12 +129,18 @@ namespace Gameplay
             totalCardsRemainig = cards.Length;
         }
 
+        /// <summary>
+        /// triggerd when home button click
+        /// </summary>
         private void OnHomeButton()
         {
             ResetScore();
             cardsGrid.DestroyCards();
         }
 
+        /// <summary>
+        /// Regenerates a new set of cards on game end
+        /// </summary>
         private void RegenerateCards()
         {
             prevCardSelected = null;
@@ -79,11 +149,17 @@ namespace Gameplay
             sFXPlayer.CompleteSfx();
         }
 
+        /// <summary>
+        /// triggerd when Play button click
+        /// </summary>
         private void OnPlayGame()
         {
             cardsGrid.GenerateCards((int)cardsLenght.x, (int)cardsLenght.y);
         }
 
+        /// <summary>
+        /// Resets the game score and the previous card selected , preparing for a new game.
+        /// </summary>
         private void ResetScore()
         {
             score.UpdateScore(0);
@@ -91,6 +167,9 @@ namespace Gameplay
             prevCardSelected = null;
         }
 
+        /// <summary>
+        /// triggerd when restart button click
+        /// </summary>
         private void OnRestartGame()
         {
             ResetScore();
@@ -98,7 +177,10 @@ namespace Gameplay
             cardsGrid.GenerateCards((int)cardsLenght.x, (int)cardsLenght.y);
         }
 
-        private async Task StartGame(ICard[,] cards)
+        /// <summary>
+        /// Start game when cards generated
+        /// </summary>
+        private void StartGame(ICard[,] cards)
         {
             if (startGameCancellationTokenSource != null)
             {
@@ -111,6 +193,9 @@ namespace Gameplay
             StartGameTask(cards, cancellationToken);
         }
 
+        /// <summary>
+        /// enabling cards, delaying for a short duration, and then disabling the cards.
+        /// </summary>
         private async Task StartGameTask(ICard[,] cards, CancellationToken cancellationToken)
         {
             foreach (var card in cards)
@@ -126,11 +211,20 @@ namespace Gameplay
             }
         }
 
+        /// <summary>
+        /// triggerd when user click on card
+        /// </summary>
         private void OnCardClick(ICard card)
         {
             _ = OnCardClickTask(card);
         }
 
+        /// <summary>
+        /// enabling the card
+        ///  checking for matches
+        ///  updating the score
+        ///  and managing card visibility.
+        /// </summary>
         private async Task OnCardClickTask(ICard card)
         {
             card.EnableCard();
@@ -165,6 +259,9 @@ namespace Gameplay
             }
         }
 
+        /// <summary>
+        /// Cancels a specified CancellationTokenSource, effectively stopping an asynchronous task.
+        /// </summary>
         private void StopTask(CancellationTokenSource cancellationTokenSource)
         {
             if (cancellationTokenSource != null)

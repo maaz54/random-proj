@@ -6,7 +6,15 @@ namespace Singleton
 {
     public class Singleton<T> : MonoBehaviour where T : Component
     {
+        /// <summary>
+        /// singleton instance
+        /// </summary>
         private static T _instance;
+
+        /// <summary>
+        /// return singleton instance
+        /// </summary>
+        /// <value></value>
         public static T Instance
         {
             get
@@ -23,6 +31,7 @@ namespace Singleton
                 return _instance;
             }
         }
+
         protected virtual void Awake()
         {
             if (_instance == null)
